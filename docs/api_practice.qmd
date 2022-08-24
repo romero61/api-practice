@@ -1,0 +1,53 @@
+---
+title: "API Practice"
+format: html
+editor: visual
+---
+
+```{r, echo= FALSE}
+library(dataRetrieval)
+library(tidyverse)
+library(metajam)
+```
+
+# USGS API
+
+```{r}
+
+siteNumber <- "11118500"
+parameterCd <- "00060"  # Discharge
+startDate <- "2019-10-01"  
+endDate <- "2020-10-05" 
+
+discharge <- readNWISdv(siteNumber, 
+                    parameterCd, startDate, endDate)
+
+discharge <- renameNWISColumns(discharge)
+
+```
+
+```{r}
+names(discharge)
+
+ggplot(discharge, aes(x = Date , y = Flow)) + geom_line()
+
+attr(discharge, "queryTime")
+```
+
+# Metajam API
+
+```{r, message=FALSE}
+# set inputs
+data_obj <-"https://knb.ecoinformatics.org/knb/d1/mn/v2/object/urn%3Auuid%3A7fc6f6db-c5ea-426a-a743-1f2edafb43b8"
+path <- "~/eds214/api-practice"
+# download data and metadata
+download_d1_data(data_obj, path)
+
+# read in data
+data <- read_d1_files("~/eds214/api-practice/doi_10.5063_F1CJ8BPH__household_language__csv")
+
+# Extract the dataframe
+dataframe <- data$data
+
+
+```
